@@ -1,0 +1,45 @@
+{
+    "name": "o3com/app-crawler",
+    "description": "PHP Application - CrawlingEngin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yoshi",
+            "email": "yoshi@1o1.co.jp"
+        }
+    ],
+	"repositories": {
+		"o3crawler": {
+			"type": "vcs",
+			"url": "https://github.com/o3com/crawler"
+		}
+    },
+    "minimum-stability": "dev",
+    "require": {
+		"php": ">=5.4",
+		"o3com/crawler": "master@dev",
+		"symfony/console": "~2.5.0",
+		"symfony/finder": "~2.5.0",
+		"symfony/yaml": "~2.5.0",
+		"symfony/dependency-injection": "~2.5.0",
+		"symfony/config": "~2.5.0",
+		"symfony/event-dispatcher": "~2.5.0",
+		"symfony/stopwatch": "~2.5.0",
+		"symfony/monolog-bridge": "~2.5.0",
+		
+		"symfony/http-foundation": "~2.5.0",
+		"fabpot/goutte": "~2.0.0",
+
+		"guzzlehttp/guzzle": "~5.1",
+		"guzzlehttp/log-subscriber": "~1.0",
+		"guzzlehttp/retry-subscriber": "~2.0",
+
+		"monolog/monolog": "@stable"
+	},
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}

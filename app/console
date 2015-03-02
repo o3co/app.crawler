@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/AppKernel.php';
+require_once __DIR__ . '/Application.php';
+
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Finder\Finder;
+
+use Application\Crawler\Command as Commands;
+use Application\Crawler\Crawler;
+use Monolog\Logger; 
+
+use Aws\S3\S3Client;
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'prod');
+$debug = getenv('SYMFONY_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
+
+$encoding = mb_internal_encoding('UTF-8');
+
+$kernel = new AppKernel($env, $debug);
+$application = new Application($kernel);
+
+// Load traverser configurations
+$application->run($input);
+
+mb_internal_encoding($encoding);
+

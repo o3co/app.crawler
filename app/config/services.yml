@@ -1,0 +1,25 @@
+# DI initialization config
+services:
+    logger:
+        class:     Monolog\Logger
+        arguments:
+            - app 
+        calls:
+            - [pushHandler, [@logger.handler]]
+    logger.handler:
+        class:     Monolog\Handler\StreamHandler
+        arguments:
+            - %kernel.log_dir%/app.log
+            #- 'debug'
+    crawler.site_registry:
+        class:     Application\Crawler\SiteRegistry
+        arguments:
+            - @crawler.site_loader
+    crawler.site_loader:
+        class:     Application\Crawler\Config\Loader\YamlFileLoader
+        arguments:
+            - @crawler.site_loader_locator
+    crawler.site_loader_locator:
+        class:   Symfony\Component\Config\FileLocator
+        arguments:
+            - %kernel.config_dir%

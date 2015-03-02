@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="true"
+         syntaxCheck="false"
+         bootstrap="./bootstrap.php"
+>
+	<php>
+		<var name="username" value="username"/>
+		<var name="password" value="password"/>
+	</php>
+    <testsuites>
+        <testsuite name="1o1 CrawlingEngine Test Suite">
+            <directory>./src/*/*/Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+
