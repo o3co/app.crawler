@@ -51,7 +51,11 @@ class CrawlerExecuteCommand extends Command implements ContainerAwareInterface
 			$logger = $container->get('logger');
 
 			$traverser->setLogger($logger);
-			$client->getClient()->getEmitter()->attach(new LogSubscriber($logger, Formatter::CLF));
+
+			// Get verbose level
+			if($output->isDebug()) {
+				$client->getClient()->getEmitter()->attach(new LogSubscriber($logger, Formatter::CLF));
+			}
 		}
 
 		$traversalConfigs = array();
