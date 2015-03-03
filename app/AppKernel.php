@@ -11,9 +11,16 @@ class AppKernel
 {
 	private $container;
 
-	public function __construct()
+	private $env;
+
+	private $debug;
+
+	public function __construct($env, $debug = false)
 	{
 		$this->initContainer();
+
+		$this->env = $env;
+		$this->debug = (bool)$debug;
 	}
 
 	protected function getDirs()
@@ -40,6 +47,16 @@ class AppKernel
     public function getContainer()
     {
         return $this->container;
+    }
+    
+    public function getEnvironment()
+    {
+        return $this->env;
+    }
+    
+    public function isDebug()
+    {
+        return (bool)$this->debug;
     }
 }
 

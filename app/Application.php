@@ -5,7 +5,9 @@ use Symfony\Component\Console\Application as BaseApplication;
 
 // Command to add
 use Application\Crawler\Command\CrawlerExecuteCommand;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputInterface,
+	Symfony\Component\Console\Input\InputOption
+;
 use Symfony\Component\Console\Output\OutputInterface,
 	Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
@@ -26,9 +28,10 @@ class Application extends BaseApplication
 
 	public function __construct(AppKernel $kernel)
 	{
+		$this->kernel = $kernel;
 		parent::__construct('O3 Crawler', '1.0');
 
-		$this->kernel = $kernel;
+        $this->getDefinition()->addOption(new InputOption('--debug', '-d', InputOption::VALUE_NONE, 'Run on debug mode.'));
 	}
 
 	public function get($name)
@@ -49,9 +52,11 @@ class Application extends BaseApplication
 
 	protected function getDefaultCommands()
 	{
-		return array_merge(parent::getDefaultCommands(), array(
-				new CrawlerExecuteCommand(),
-			));
+		$commands = array();
+		foreach($this->getContainer()->findTaggedServiceIds('command') as $id => $tags) {
+			$commands[]  = $this->getContainer()->get($id);	
+		}
+		return array_merge(parent::getDefaultCommands(), $commands);
 	}
 
     public function run(InputInterface $input = null, OutputInterface $output = null)
@@ -67,4 +72,9 @@ class Application extends BaseApplication
 
 		return parent::run($input, $output);
 	}
+    
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
 }

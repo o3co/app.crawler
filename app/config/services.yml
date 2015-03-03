@@ -23,3 +23,8 @@ services:
         class:   Symfony\Component\Config\FileLocator
         arguments:
             - %kernel.config_dir%
+
+    command.crawler_execute:
+        class:  Application\Crawler\Command\CrawlerExecuteCommand
+        tags:
+            -  { name: command }

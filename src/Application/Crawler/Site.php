@@ -8,6 +8,9 @@ use Psr\Log\LoggerInterface,
 	Psr\Log\NullLogger
 ;
 
+use Symfony\Component\DependencyInjection\ContainerInterface,
+	Symfony\Component\DependencyInjection\ContainerAwareInterface
+;
 
 /**
  * Site 
@@ -18,8 +21,10 @@ use Psr\Log\LoggerInterface,
  * @author Yoshi<yoshi@1o1.co.jp> 
  * @license { LICENSE }
  */
-abstract class Site extends BaseSite implements LoggerAwareInterface 
+abstract class Site extends BaseSite implements LoggerAwareInterface, ContainerAwareInterface 
 {
+	private $container;
+
 	/**
 	 * logger 
 	 * 
@@ -27,6 +32,8 @@ abstract class Site extends BaseSite implements LoggerAwareInterface
 	 * @access private
 	 */
 	private $logger;
+
+	private $debug;
     
     /**
      * getLogger 
@@ -65,7 +72,13 @@ abstract class Site extends BaseSite implements LoggerAwareInterface
 	public function initWithLoader($loader, array $configs = array())
 	{
 		if($loader->canLoad($this->getSiteName())) {
-			$this->init(array_merge($loader->load($this->getSiteName()), $configs));
+			$configs = array_merge($loader->load($this->getSiteName()), $configs);
+
+			$containerParameters = clone $this->getContainer()->getParameterBag();
+			$containerParameters->add($configs);
+			$containerParameters->resolve();
+
+			$this->init($containerParameters->all());
 		}
 	}
 
@@ -77,5 +90,28 @@ abstract class Site extends BaseSite implements LoggerAwareInterface
 	 * @return void
 	 */
 	abstract protected function getSiteName();
+
+
+	public function isDebug()
+	{
+		return (bool)$this->debug;
+	}
+
+	public function enableDebug()
+	{
+		$this->debug = true;
+	}
+
+    public function getContainer()
+    {
+        return $this->container;
+    }
+    
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
 }
 

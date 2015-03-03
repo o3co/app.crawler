@@ -31,12 +31,28 @@ class CrawlerExecuteCommand extends Command implements ContainerAwareInterface
 			->setName('crawler:execute')
 			->setDefinition(array(
 					new InputArgument('name', InputArgument::REQUIRED, 'Traverser name'),
+					new InputArgument('params', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'parameters')
 				))
 		;
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+		$params = array();
+		if($input->hasArgument('params')) {
+			foreach($input->getArgument('params', array()) as $kv) {
+				list($key, $value) = str_getcsv($kv, '=');
+
+				if(isset($params[$key])) {
+					if (!is_array($params[$key])) {
+						$params[$key] = array($params[$key]);
+					}
+					$params[$key][] = $value;
+				} else {
+					$params[$key] = $value;
+				}
+			}
+		}
 		$name = $input->getArgument('name');
 		$container = $this->getContainer();
 		$registry = $container->get('crawler.site_registry');
@@ -59,18 +75,24 @@ class CrawlerExecuteCommand extends Command implements ContainerAwareInterface
 		}
 
 		$traversalConfigs = array();
-		$traverserConfigs = array();
 
 		if($input->hasOption('verbose')) {
-			$traverserConfigs['verbose'] = $input->getOption('verbose');
+			$params['verbose'] = $input->getOption('verbose');
 		}
 
-		$traverserConfigs['output'] = $output;
+		$params['debug'] = false;
+		if($input->hasOption('debug')) {
+			$params['debug'] = (bool)$input->getOption('debug');
+
+			$traverser->enableDebug();
+		}
+
+		$params['output'] = $output;
 
 		// initialize with configuration loader
 		$loader = new YamlFileLoader(new FileLocator($container->getParameter('kernel.config_dir')));
 
-		$traverser->initWithLoader($loader, $traverserConfigs);
+		$traverser->initWithLoader($loader, $params);
 
 
 		try {
