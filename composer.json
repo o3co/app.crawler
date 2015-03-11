@@ -1,5 +1,5 @@
 {
-    "name": "o3com/app-crawler",
+    "name": "o3co/app-crawler",
     "description": "PHP Application - CrawlingEngin",
     "license": "MIT",
     "authors": [
@@ -11,13 +11,13 @@
 	"repositories": {
 		"o3crawler": {
 			"type": "vcs",
-			"url": "https://github.com/o3com/crawler"
+			"url": "https://github.com/o3co/crawler"
 		}
     },
     "minimum-stability": "dev",
     "require": {
 		"php": ">=5.4",
-		"o3com/crawler": "master@dev",
+		"o3co/crawler": "master@dev",
 		"symfony/console": "~2.5.0",
 		"symfony/finder": "~2.5.0",
 		"symfony/yaml": "~2.5.0",
